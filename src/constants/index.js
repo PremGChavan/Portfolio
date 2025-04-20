@@ -10,7 +10,7 @@ const navLinks = [
   {
     name: "Skills",
     link: "#skills",
-  },
+  }
 ];
 
 const words = [
