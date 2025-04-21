@@ -1,16 +1,20 @@
 // import { useRef, useState } from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import TitleHeader from '../components/TitleHeader'
 import ContactExperience from '../components/Models/Contact/ContactExperience';
+import  emailjs from '@emailjs/browser'
 
 
 const Contact = () => {
+
+  const formRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     message: ''
   });
+  const [loading, setLoading] = useState(false);
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,11 +24,25 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    // console.log('Form submitted:' , formData);
+    setLoading(true);
 
-    console.log('Form submitted:' , formData);
-    setFormData({ name:'', email: '', message: '' })
+    try {
+       await emailjs.sendForm(
+        import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY,
+      )
+      setFormData({ name:'', email: '', message: '' })
+    } catch (error) {
+      console.log('EMAILJS ERROR,', error );
+    } finally {
+      setLoading(false)
+    }
+    
     
   }
 
@@ -42,7 +60,7 @@ const Contact = () => {
           {/* Contact Form - Left Side */}
           <div className='xl:col-span-5'>
             <div className='flex-center card-border rounded-xl p-10'>
-              <form onSubmit={handleSubmit} className='w-full flex flex-col gap-7'>
+              <form onSubmit={handleSubmit} className='w-full flex flex-col gap-7' ref={formRef}>
                 <div className='mb-6'>
                   <label htmlFor="name">Name</label>
                   <input 
@@ -81,10 +99,10 @@ const Contact = () => {
                 </div>
 
                 <button
-                  type='submit'>
+                  type='submit' disabled={loading}>
                   <div className='cta-button group'>
                     <div className='bg-circle'/>   
-                    <p className='text'>Send Message</p>                  
+                    <p className='text'>{ loading ? 'Sending...' : 'Send Message' }</p>                  
                     <div className='arrow-wrapper'>
                       <img src="/images/arrow-down.svg" alt="arrow" />
                     </div>
@@ -97,12 +115,10 @@ const Contact = () => {
           {/* 3D Experience - Right side */}
 
           <div className='xl:col-span-7 min-h-96 '>
-            <div className='w-full h-full bg-[#cd7c2e] hover:cursor-grab'>
+            <div className='w-full h-full bg-[#cd7c2e] hover:cursor-grab '>
               <ContactExperience/>
             </div>
           </div>
-
-
         </div>
       </div>      
     </section>
