@@ -18,7 +18,7 @@ const Footer = () => {
         <div className='flex flex-col justify-center'>
           <p className='text-center md:text-end'>© {new Date().getFullYear} Prem Chavan  |  All rights reserved.</p>
           <p className=' font-bold text-center md:text-end'>Currently the details in this portfolio are just for Demo</p>
-          <p className=' font-bold text-center md:text-end'> I will be updating my details soon</p>
+          <p className=' font-bold text-center md:text-end'> I will be updating my details</p>
 
         </div>
       </div>
